@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { Image as ImageIcon } from "lucide-react"
 import { Navbar } from "@/components/navbar"
@@ -43,10 +44,19 @@ export default async function GalleryPage() {
                     className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-border bg-card"
                   >
                     <div className="relative aspect-square bg-secondary">
-                      {/* Placeholder for image - in production, use actual image_url */}
-                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-primary/10 to-accent/10">
-                        <ImageIcon className="h-16 w-16 text-primary/30" />
-                      </div>
+                      {image.image_url ? (
+                        <Image
+                          src={image.image_url}
+                          alt={image.caption || image.events?.title || "Gallery image"}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-primary/10 to-accent/10">
+                          <ImageIcon className="h-16 w-16 text-primary/30" />
+                        </div>
+                      )}
                     </div>
                     {(image.caption || image.events?.title) && (
                       <div className="p-4">

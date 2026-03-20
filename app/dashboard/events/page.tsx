@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 interface Event {
   id: string
@@ -153,15 +154,24 @@ export default function EventsPage() {
                       Max {event.max_attendees} attendees
                     </div>
                   )}
-                  {!isRegistered(event.id) && (
-                    <Button
-                      className="mt-4 w-full"
-                      onClick={() => handleRegister(event.id)}
-                      disabled={registering === event.id}
-                    >
-                      {registering === event.id ? "Registering..." : "Register Now"}
+                  <div className="mt-4 flex gap-3">
+                    <Button variant="outline" className="flex-1" asChild>
+                      <Link href={`/dashboard/events/${event.id}`}>View Details</Link>
                     </Button>
-                  )}
+                    {!isRegistered(event.id) ? (
+                      <Button
+                        className="flex-1"
+                        onClick={() => handleRegister(event.id)}
+                        disabled={registering === event.id}
+                      >
+                        {registering === event.id ? "Registering..." : "Register Now"}
+                      </Button>
+                    ) : (
+                      <Button className="flex-1" disabled>
+                        Registered
+                      </Button>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -197,6 +207,9 @@ export default function EventsPage() {
                       year: "numeric",
                     })}
                   </div>
+                  <Button variant="outline" className="mt-4 w-full" asChild>
+                    <Link href={`/dashboard/events/${event.id}`}>View Details</Link>
+                  </Button>
                 </CardContent>
               </Card>
             ))}

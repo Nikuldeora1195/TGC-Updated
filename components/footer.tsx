@@ -5,6 +5,7 @@ const footerLinks = {
   platform: [
     { label: "Home", href: "/" },
     { label: "Events", href: "/events" },
+    { label: "Team", href: "/team" },
     { label: "Gallery", href: "/gallery" },
     { label: "About", href: "/about" },
   ],

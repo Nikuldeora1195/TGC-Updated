@@ -100,9 +100,14 @@ export default async function EventsPage() {
                           Limited to {event.max_attendees} attendees
                         </div>
                       )}
-                      <Button className="mt-4 w-full" asChild>
-                        <Link href="/auth/login">Register Now</Link>
-                      </Button>
+                      <div className="mt-4 flex gap-3">
+                        <Button variant="outline" className="flex-1" asChild>
+                          <Link href={`/events/${event.id}`}>View Details</Link>
+                        </Button>
+                        <Button className="flex-1" asChild>
+                          <Link href="/auth/login">Register Now</Link>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -146,6 +151,9 @@ export default async function EventsPage() {
                           year: "numeric",
                         })}
                       </div>
+                      <Button variant="outline" className="mt-4 w-full" asChild>
+                        <Link href={`/events/${event.id}`}>View Details</Link>
+                      </Button>
                     </CardContent>
                   </Card>
                 ))}
