@@ -3,13 +3,14 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import { Bell, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/team", label: "Team" },
+  { href: "/queries", label: "Queries" },
   { href: "/gallery", label: "Gallery" },
   { href: "/about", label: "About" },
 ]
@@ -41,6 +42,11 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/notifications" aria-label="Notifications">
+              <Bell className="h-5 w-5" />
+            </Link>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href="/auth/login">Log in</Link>
           </Button>
@@ -71,6 +77,12 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <Button variant="ghost" asChild className="justify-start">
+              <Link href="/notifications" onClick={() => setIsOpen(false)}>
+                <Bell className="mr-2 h-4 w-4" />
+                Notifications
+              </Link>
+            </Button>
             <div className="mt-4 flex flex-col gap-2">
               <Button variant="outline" asChild className="w-full">
                 <Link href="/auth/login">Log in</Link>

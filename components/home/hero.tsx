@@ -41,6 +41,9 @@ export function Hero() {
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
+          <Button size="lg" variant="outline" asChild className="text-base">
+            <Link href="/auth/login">Log In</Link>
+          </Button>
           <Button size="lg" variant="outline" asChild className="gap-2 text-base">
             <Link href="/events">Explore Events</Link>
           </Button>

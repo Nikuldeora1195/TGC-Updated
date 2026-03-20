@@ -32,6 +32,8 @@ const studentLinks = [
   { href: "/dashboard/events", label: "Events", icon: Calendar },
   { href: "/dashboard/attendance", label: "Attendance", icon: Users },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award },
+  { href: "/dashboard/team", label: "Team", icon: Users },
+  { href: "/dashboard/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
   { href: "/dashboard/help", label: "Help Desk", icon: HelpCircle },
 ]
@@ -41,9 +43,10 @@ const coreTeamLinks = [
   { href: "/dashboard/events", label: "Manage Events", icon: Calendar },
   { href: "/dashboard/attendance", label: "Attendance", icon: Users },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award },
+  { href: "/dashboard/team", label: "Team", icon: Users },
   { href: "/dashboard/gallery", label: "Gallery", icon: ImageIcon },
-  { href: "/dashboard/queries", label: "Queries", icon: HelpCircle },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
+  { href: "/dashboard/queries", label: "Queries", icon: HelpCircle },
 ]
 
 const adminLinks = [
@@ -52,9 +55,10 @@ const adminLinks = [
   { href: "/dashboard/events", label: "Events", icon: Calendar },
   { href: "/dashboard/attendance", label: "Attendance", icon: Users },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award },
+  { href: "/dashboard/team", label: "Team", icon: Users },
   { href: "/dashboard/gallery", label: "Gallery", icon: ImageIcon },
-  { href: "/dashboard/queries", label: "Queries", icon: HelpCircle },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
+  { href: "/dashboard/queries", label: "Queries", icon: HelpCircle },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ]
 

@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { CoreTeam } from "@/components/home/core-team"
-import { Target, Eye, Heart, Zap } from "lucide-react"
+import { Target, Eye, Heart, Zap, Mail, Phone, MapPin } from "lucide-react"
 
 export default function AboutPage() {
   return (
@@ -98,6 +98,44 @@ export default function AboutPage() {
 
         {/* Core Team */}
         <CoreTeam />
+
+        {/* Contact Us */}
+        <section id="contact" className="border-t border-border/50 bg-card/30 py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="text-3xl font-bold text-foreground">Contact Us</h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Reach out to the TechGenz team for collaborations, queries, or community support.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
+              <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">Email</h3>
+                <p className="mt-2 text-muted-foreground">contact@techgenz.in</p>
+              </div>
+
+              <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <Phone className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">Phone</h3>
+                <p className="mt-2 text-muted-foreground">+91 98765 43210</p>
+              </div>
+
+              <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">Location</h3>
+                <p className="mt-2 text-muted-foreground">Pacific Institute of Technology Campus</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />

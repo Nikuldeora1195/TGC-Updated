@@ -26,6 +26,7 @@ export default function QueriesPage() {
   const [selectedQuery, setSelectedQuery] = useState<Query | null>(null)
   const [reply, setReply] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchQueries()
@@ -33,12 +34,54 @@ export default function QueriesPage() {
 
   async function fetchQueries() {
     const supabase = createClient()
-    const { data } = await supabase
+    setError(null)
+
+    const { data: queriesData, error: queriesError } = await supabase
       .from("queries")
-      .select("*, members(name, email, member_id)")
+      .select("*")
       .order("created_at", { ascending: false })
 
-    setQueries(data || [])
+    if (queriesError) {
+      setError(queriesError.message)
+      setQueries([])
+      setLoading(false)
+      return
+    }
+
+    const memberIds = Array.from(
+      new Set((queriesData || []).map((query) => query.member_id).filter(Boolean))
+    )
+
+    let membersMap = new Map<string, { name: string; email: string; member_id: string }>()
+
+    if (memberIds.length > 0) {
+      const { data: membersData, error: membersError } = await supabase
+        .from("members")
+        .select("id, name, email, member_id")
+        .in("id", memberIds)
+
+      if (membersError) {
+        setError(membersError.message)
+      } else {
+        membersMap = new Map(
+          (membersData || []).map((member) => [
+            member.id,
+            {
+              name: member.name,
+              email: member.email,
+              member_id: member.member_id,
+            },
+          ])
+        )
+      }
+    }
+
+    const mergedQueries = (queriesData || []).map((query) => ({
+      ...query,
+      members: membersMap.get(query.member_id) || null,
+    }))
+
+    setQueries(mergedQueries)
     setLoading(false)
   }
 
@@ -63,6 +106,8 @@ export default function QueriesPage() {
       setReply("")
       setSelectedQuery(null)
       fetchQueries()
+    } else {
+      setError(error.message)
     }
     setSubmitting(false)
   }
@@ -91,6 +136,12 @@ export default function QueriesPage() {
           Manage and respond to member queries.
         </p>
       </div>
+
+      {error && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </div>
+      )}
 
       <Tabs defaultValue="open">
         <TabsList>

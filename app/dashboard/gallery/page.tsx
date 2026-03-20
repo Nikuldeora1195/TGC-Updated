@@ -51,6 +51,7 @@ export default function DashboardGalleryPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [roleError, setRoleError] = useState<string | null>(null)
+  const [role, setRole] = useState<"student" | "core_team" | "admin">("student")
   const [formData, setFormData] = useState({
     imageUrl: "",
     caption: "",
@@ -85,20 +86,29 @@ export default function DashboardGalleryPage() {
       .eq("id", user.id)
       .single()
 
-    if (member?.role !== "core_team" && member?.role !== "admin") {
-      setRoleError("Only core team and admin members can manage the gallery.")
+    const currentRole = (member?.role || "student") as "student" | "core_team" | "admin"
+    setRole(currentRole)
+
+    const galleryRequest = supabase
+      .from("gallery")
+      .select("id, image_url, caption, event_id, uploaded_by, created_at, events(title)")
+      .order("created_at", { ascending: false })
+
+    if (currentRole !== "core_team" && currentRole !== "admin") {
+      const { data: galleryData, error: galleryError } = await galleryRequest
+
+      if (galleryError) {
+        setError(galleryError.message)
+      } else {
+        setItems((galleryData as GalleryItem[]) || [])
+      }
+
       setLoading(false)
       return
     }
 
     const [{ data: galleryData, error: galleryError }, { data: eventsData, error: eventsError }] =
-      await Promise.all([
-        supabase
-          .from("gallery")
-          .select("id, image_url, caption, event_id, uploaded_by, created_at, events(title)")
-          .order("created_at", { ascending: false }),
-        supabase.from("events").select("id, title").order("event_date", { ascending: false }),
-      ])
+      await Promise.all([galleryRequest, supabase.from("events").select("id, title").order("event_date", { ascending: false })])
 
     if (galleryError || eventsError) {
       setError(galleryError?.message || eventsError?.message || "Failed to load gallery data.")
@@ -211,6 +221,55 @@ export default function DashboardGalleryPage() {
           <p className="text-sm text-muted-foreground">{roleError}</p>
         </CardContent>
       </Card>
+    )
+  }
+
+  if (role === "student") {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground lg:text-3xl">Gallery</h1>
+          <p className="mt-1 text-muted-foreground">
+            Browse event photos without leaving your member dashboard.
+          </p>
+        </div>
+
+        {error && (
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Community Gallery</CardTitle>
+            <CardDescription>Recent images from workshops, meetups, and events.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {items.length > 0 ? (
+              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {items.map((item) => (
+                  <div key={item.id} className="overflow-hidden rounded-xl border border-border bg-card">
+                    <div className="aspect-[4/3] bg-muted">
+                      <img
+                        src={item.image_url}
+                        alt={item.caption || item.events?.title || "Gallery image"}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="space-y-2 p-4">
+                      <p className="text-sm font-medium text-foreground">{item.caption || "Untitled image"}</p>
+                      <p className="text-xs text-muted-foreground">{item.events?.title || "No event linked"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-10 text-center text-muted-foreground">No gallery images available yet.</div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     )
   }
 

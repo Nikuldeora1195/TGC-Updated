@@ -1,0 +1,191 @@
+import { createClient } from "@/lib/supabase/server"
+import { TeamMemberCard } from "@/components/team/member-card"
+
+function groupByBatch(members: any[]) {
+  return members.reduce<Record<string, any[]>>((acc, member) => {
+    const key = member.batch_label || "Previous Team"
+    if (!acc[key]) {
+      acc[key] = []
+    }
+    acc[key].push(member)
+    return acc
+  }, {})
+}
+
+export default async function DashboardTeamPage() {
+  const supabase = await createClient()
+
+  const { data: teamMembers, error } = await supabase
+    .from("team_members")
+    .select("*")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true })
+
+  const safeMembers = error ? [] : teamMembers || []
+
+  const founders = safeMembers.filter(
+    (member) => member.section === "founder" || member.section === "co_founder"
+  )
+  const currentTeam = safeMembers.filter((member) => member.section === "current_team")
+  const viceCaptains = safeMembers.filter((member) => member.section === "vice_captain")
+  const juniorCaptains = safeMembers.filter((member) => member.section === "jr_captain")
+  const previousBatches = safeMembers.filter((member) => member.section === "previous_batch")
+  const groupedPreviousBatches = Object.entries(groupByBatch(previousBatches))
+
+  return (
+    <div className="space-y-12">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground lg:text-3xl">Team</h1>
+        <p className="mt-1 text-muted-foreground">
+          Meet the founders, current team, vice captains, junior captains, and previous batches.
+        </p>
+      </div>
+
+      <section>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Founders</h2>
+          <p className="mt-2 text-muted-foreground">The people who started the TechGenz journey.</p>
+        </div>
+
+        {founders.length > 0 ? (
+          <div className="mx-auto mt-10 grid max-w-xl  gap-6 sm:grid-cols-2">
+            {founders.slice(0, 2).map((member) => (
+              <TeamMemberCard
+                key={member.id}
+                name={member.name}
+                displayRole={member.display_role}
+                imageUrl={member.image_url}
+                bio={member.bio}
+                linkedinUrl={member.linkedin_url}
+                githubUrl={member.github_url}
+                email={member.email}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+            {error
+              ? "The team page will appear here after the team table is created and populated by the admin."
+              : "Founder details will appear here once they are added."}
+          </div>
+        )}
+      </section>
+
+      <section>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Current Team</h2>
+          <p className="mt-2 text-muted-foreground">The current members leading events and community initiatives.</p>
+        </div>
+        {currentTeam.length > 0 ? (
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {currentTeam.map((member) => (
+              <TeamMemberCard
+                key={member.id}
+                name={member.name}
+                displayRole={member.display_role}
+                imageUrl={member.image_url}
+                bio={member.bio}
+                linkedinUrl={member.linkedin_url}
+                githubUrl={member.github_url}
+                email={member.email}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+            Current team members will appear here once they are added.
+          </div>
+        )}
+      </section>
+
+      <section>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Vice Captains</h2>
+          <p className="mt-2 text-muted-foreground">Team members supporting leadership across major initiatives.</p>
+        </div>
+        {viceCaptains.length > 0 ? (
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {viceCaptains.map((member) => (
+              <TeamMemberCard
+                key={member.id}
+                name={member.name}
+                displayRole={member.display_role}
+                imageUrl={member.image_url}
+                bio={member.bio}
+                linkedinUrl={member.linkedin_url}
+                githubUrl={member.github_url}
+                email={member.email}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+            Vice captain entries will appear here once they are added.
+          </div>
+        )}
+      </section>
+
+      <section>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Junior Captains</h2>
+          <p className="mt-2 text-muted-foreground">Emerging team members learning and growing into leadership.</p>
+        </div>
+        {juniorCaptains.length > 0 ? (
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {juniorCaptains.map((member) => (
+              <TeamMemberCard
+                key={member.id}
+                name={member.name}
+                displayRole={member.display_role}
+                imageUrl={member.image_url}
+                bio={member.bio}
+                linkedinUrl={member.linkedin_url}
+                githubUrl={member.github_url}
+                email={member.email}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+            Junior captain entries will appear here once they are added.
+          </div>
+        )}
+      </section>
+
+      <section>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Previous Batches</h2>
+          <p className="mt-2 text-muted-foreground">Alumni teams that shaped TechGenz over the years.</p>
+        </div>
+
+        {groupedPreviousBatches.length > 0 ? (
+          <div className="mt-10 space-y-12">
+            {groupedPreviousBatches.map(([batchLabel, members]) => (
+              <div key={batchLabel}>
+                <h3 className="text-xl font-semibold text-foreground">{batchLabel}</h3>
+                <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {members.map((member) => (
+                    <TeamMemberCard
+                      key={member.id}
+                      name={member.name}
+                      displayRole={member.display_role}
+                      imageUrl={member.image_url}
+                      bio={member.bio}
+                      linkedinUrl={member.linkedin_url}
+                      githubUrl={member.github_url}
+                      email={member.email}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+            Previous batch teams will appear here once they are added.
+          </div>
+        )}
+      </section>
+    </div>
+  )
+}
