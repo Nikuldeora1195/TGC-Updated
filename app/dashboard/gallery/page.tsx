@@ -33,6 +33,16 @@ interface GalleryItem {
   } | null
 }
 
+const GALLERY_BUCKET = "gallery-images"
+
+function getFriendlyStorageError(message: string) {
+  if (message.toLowerCase().includes("bucket")) {
+    return `Storage bucket "${GALLERY_BUCKET}" is not ready. Create a public Supabase Storage bucket with this name, then try again.`
+  }
+
+  return message
+}
+
 export default function DashboardGalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([])
   const [events, setEvents] = useState<EventItem[]>([])
@@ -46,6 +56,7 @@ export default function DashboardGalleryPage() {
     caption: "",
     eventId: "",
   })
+  const [imageFile, setImageFile] = useState<File | null>(null)
 
   useEffect(() => {
     fetchData()
@@ -115,8 +126,37 @@ export default function DashboardGalleryPage() {
       return
     }
 
+    let imageUrl = formData.imageUrl.trim()
+
+    if (imageFile) {
+      const fileExt = imageFile.name.split(".").pop() || "jpg"
+      const filePath = `${user.id}/gallery-${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from(GALLERY_BUCKET)
+        .upload(filePath, imageFile, { upsert: false })
+
+      if (uploadError) {
+        setError(getFriendlyStorageError(uploadError.message))
+        setSubmitting(false)
+        return
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(filePath)
+
+      imageUrl = publicUrl
+    }
+
+    if (!imageUrl) {
+      setError("Please upload an image file or provide an image URL.")
+      setSubmitting(false)
+      return
+    }
+
     const { error: insertError } = await supabase.from("gallery").insert({
-      image_url: formData.imageUrl,
+      image_url: imageUrl,
       caption: formData.caption || null,
       event_id: formData.eventId === "none" || !formData.eventId ? null : formData.eventId,
       uploaded_by: user.id,
@@ -133,6 +173,7 @@ export default function DashboardGalleryPage() {
       caption: "",
       eventId: "",
     })
+    setImageFile(null)
 
     await fetchData()
     setSubmitting(false)
@@ -197,6 +238,19 @@ export default function DashboardGalleryPage() {
 
             <div className="grid gap-6 lg:grid-cols-2">
               <div className="space-y-2 lg:col-span-2">
+                <Label htmlFor="image-file">Upload Image</Label>
+                <Input
+                  id="image-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Upload to the public Supabase bucket <code>{GALLERY_BUCKET}</code>, or use an image URL below.
+                </p>
+              </div>
+
+              <div className="space-y-2 lg:col-span-2">
                 <Label htmlFor="image-url">Image URL</Label>
                 <Input
                   id="image-url"
@@ -204,7 +258,6 @@ export default function DashboardGalleryPage() {
                   placeholder="https://example.com/event-photo.jpg"
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  required
                 />
               </div>
 

@@ -29,6 +29,8 @@ export default async function TeamPage() {
     (member) => member.section === "founder" || member.section === "co_founder"
   )
   const currentTeam = safeMembers.filter((member) => member.section === "current_team")
+  const viceCaptains = safeMembers.filter((member) => member.section === "vice_captain")
+  const juniorCaptains = safeMembers.filter((member) => member.section === "jr_captain")
   const previousBatches = safeMembers.filter((member) => member.section === "previous_batch")
   const groupedPreviousBatches = Object.entries(groupByBatch(previousBatches))
 
@@ -53,7 +55,7 @@ export default async function TeamPage() {
         </section>
 
         <section className="py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Founders</h2>
               <p className="mt-2 text-muted-foreground">
@@ -62,7 +64,7 @@ export default async function TeamPage() {
             </div>
 
             {founders.length > 0 ? (
-              <div className="mt-10 grid gap-8 md:grid-cols-2">
+              <div className="mx-auto mt-10 grid max-w-5xl gap-6 sm:grid-cols-2">
                 {founders.slice(0, 2).map((member) => (
                   <TeamMemberCard
                     key={member.id}
@@ -115,6 +117,74 @@ export default async function TeamPage() {
                 {error
                   ? "The team page will appear here after the team table is created and populated by the admin."
                   : "Current team members will appear here once they are added."}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Vice Captains</h2>
+              <p className="mt-2 text-muted-foreground">
+                Team members supporting leadership across major initiatives.
+              </p>
+            </div>
+
+            {viceCaptains.length > 0 ? (
+              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {viceCaptains.map((member) => (
+                  <TeamMemberCard
+                    key={member.id}
+                    name={member.name}
+                    displayRole={member.display_role}
+                    imageUrl={member.image_url}
+                    bio={member.bio}
+                    linkedinUrl={member.linkedin_url}
+                    githubUrl={member.github_url}
+                    email={member.email}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+                {error
+                  ? "The team page will appear here after the team table is created and populated by the admin."
+                  : "Vice captain entries will appear here once they are added."}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="border-y border-border/50 bg-card/30 py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Junior Captains</h2>
+              <p className="mt-2 text-muted-foreground">
+                Emerging team members learning, supporting, and growing into leadership.
+              </p>
+            </div>
+
+            {juniorCaptains.length > 0 ? (
+              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {juniorCaptains.map((member) => (
+                  <TeamMemberCard
+                    key={member.id}
+                    name={member.name}
+                    displayRole={member.display_role}
+                    imageUrl={member.image_url}
+                    bio={member.bio}
+                    linkedinUrl={member.linkedin_url}
+                    githubUrl={member.github_url}
+                    email={member.email}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-10 rounded-2xl border border-border/50 bg-card p-10 text-center text-muted-foreground">
+                {error
+                  ? "The team page will appear here after the team table is created and populated by the admin."
+                  : "Junior captain entries will appear here once they are added."}
               </div>
             )}
           </div>

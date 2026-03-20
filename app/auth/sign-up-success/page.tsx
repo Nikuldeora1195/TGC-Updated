@@ -1,5 +1,6 @@
+import Image from "next/image"
 import Link from "next/link"
-import { Zap, Mail, ArrowRight } from "lucide-react"
+import { Mail, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function SignUpSuccessPage() {
@@ -33,7 +34,7 @@ export default function SignUpSuccessPage() {
         </div>
 
         <div className="mt-12 flex items-center gap-2 text-sm text-muted-foreground">
-          <Zap className="h-4 w-4 text-primary" />
+          <Image src="/apple-icon.png" alt="TechGenz logo" width={16} height={16} className="h-4 w-4 object-contain" />
           <span>TechGenz - Pacific Institute of Technology</span>
         </div>
       </div>

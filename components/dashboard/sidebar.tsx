@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
@@ -8,11 +9,10 @@ import {
   Award,
   Bell,
   HelpCircle,
-  Image,
+  Image as ImageIcon,
   Users,
   Settings,
   LogOut,
-  Zap,
   ChevronLeft,
   Menu,
 } from "lucide-react"
@@ -30,6 +30,7 @@ interface SidebarProps {
 const studentLinks = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/events", label: "Events", icon: Calendar },
+  { href: "/dashboard/attendance", label: "Attendance", icon: Users },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
   { href: "/dashboard/help", label: "Help Desk", icon: HelpCircle },
@@ -40,7 +41,7 @@ const coreTeamLinks = [
   { href: "/dashboard/events", label: "Manage Events", icon: Calendar },
   { href: "/dashboard/attendance", label: "Attendance", icon: Users },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award },
-  { href: "/dashboard/gallery", label: "Gallery", icon: Image },
+  { href: "/dashboard/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/dashboard/queries", label: "Queries", icon: HelpCircle },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
 ]
@@ -51,7 +52,7 @@ const adminLinks = [
   { href: "/dashboard/events", label: "Events", icon: Calendar },
   { href: "/dashboard/attendance", label: "Attendance", icon: Users },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award },
-  { href: "/dashboard/gallery", label: "Gallery", icon: Image },
+  { href: "/dashboard/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/dashboard/queries", label: "Queries", icon: HelpCircle },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
@@ -76,9 +77,7 @@ export function DashboardSidebar({ role, userName, memberId }: SidebarProps) {
     <>
       <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
-            <Zap className="h-4 w-4 text-sidebar-primary-foreground" />
-          </div>
+          <Image src="/apple-icon.png" alt="TechGenz logo" width={32} height={32} className="h-8 w-8 object-contain" />
           {!collapsed && (
             <span className="text-lg font-bold text-sidebar-foreground">
               Tech<span className="text-sidebar-primary">Genz</span>

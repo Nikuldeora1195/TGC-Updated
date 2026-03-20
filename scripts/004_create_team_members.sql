@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.team_members (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   CONSTRAINT team_members_section_check CHECK (
-    section IN ('founder', 'co_founder', 'current_team', 'previous_batch')
+    section IN ('founder', 'co_founder', 'current_team', 'vice_captain', 'jr_captain', 'previous_batch')
   )
 );
 

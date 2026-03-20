@@ -1,9 +1,10 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Zap, ArrowLeft, Loader2 } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -63,9 +64,7 @@ export default function SignUpPage() {
           </Link>
 
           <div className="mb-8 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <Zap className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <Image src="/apple-icon.png" alt="TechGenz logo" width={40} height={40} className="h-10 w-10 object-contain" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Join TechGenz</h1>
               <p className="text-sm text-muted-foreground">Create your account</p>

@@ -10,7 +10,7 @@ export async function CoreTeam() {
     .from("team_members")
     .select("*")
     .eq("is_active", true)
-    .in("section", ["founder", "co_founder", "current_team"])
+    .in("section", ["founder", "co_founder", "current_team", "vice_captain", "jr_captain"])
     .order("sort_order", { ascending: true })
     .limit(4)
 

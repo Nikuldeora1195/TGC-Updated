@@ -36,6 +36,8 @@ const sectionLabels: Record<string, string> = {
   founder: "Founder",
   co_founder: "Co-Founder",
   current_team: "Current Team",
+  vice_captain: "Vice Captains",
+  jr_captain: "Junior Captains",
   previous_batch: "Previous Batch",
 }
 
@@ -48,6 +50,8 @@ const batchOptions = [
   "Custom",
 ]
 
+const TEAM_BUCKET = "team-images"
+
 function getFriendlyTeamTableError(message: string) {
   if (
     message.includes("schema cache") ||
@@ -56,6 +60,14 @@ function getFriendlyTeamTableError(message: string) {
     message.includes("team_members")
   ) {
     return "Team table is not ready yet. Run scripts/004_create_team_members.sql in Supabase SQL Editor, then refresh this page."
+  }
+
+  return message
+}
+
+function getFriendlyTeamStorageError(message: string) {
+  if (message.toLowerCase().includes("bucket")) {
+    return `Storage bucket "${TEAM_BUCKET}" is not ready. Create a public Supabase Storage bucket with this name, then try again.`
   }
 
   return message
@@ -82,6 +94,7 @@ export default function TeamSettingsPage() {
     sortOrder: "0",
     isActive: true,
   })
+  const [imageFile, setImageFile] = useState<File | null>(null)
 
   useEffect(() => {
     fetchMembers()
@@ -146,6 +159,29 @@ export default function TeamSettingsPage() {
       return
     }
 
+    let imageUrl = formData.imageUrl.trim()
+
+    if (imageFile) {
+      const fileExt = imageFile.name.split(".").pop() || "jpg"
+      const filePath = `${user.id}/team-${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from(TEAM_BUCKET)
+        .upload(filePath, imageFile, { upsert: false })
+
+      if (uploadError) {
+        setError(getFriendlyTeamStorageError(uploadError.message))
+        setSubmitting(false)
+        return
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(TEAM_BUCKET).getPublicUrl(filePath)
+
+      imageUrl = publicUrl
+    }
+
     const { error: insertError } = await supabase.from("team_members").insert({
       name: formData.name,
       display_role: formData.displayRole,
@@ -157,7 +193,7 @@ export default function TeamSettingsPage() {
             : formData.batchLabel || null
           : null,
       bio: formData.bio || null,
-      image_url: formData.imageUrl || null,
+      image_url: imageUrl || null,
       linkedin_url: formData.linkedinUrl || null,
       github_url: formData.githubUrl || null,
       email: formData.email || null,
@@ -186,6 +222,7 @@ export default function TeamSettingsPage() {
       sortOrder: "0",
       isActive: true,
     })
+    setImageFile(null)
 
     await fetchMembers()
     setSubmitting(false)
@@ -283,6 +320,8 @@ export default function TeamSettingsPage() {
                     <SelectItem value="founder">Founder</SelectItem>
                     <SelectItem value="co_founder">Co-Founder</SelectItem>
                     <SelectItem value="current_team">Current Team</SelectItem>
+                    <SelectItem value="vice_captain">Vice Captains</SelectItem>
+                    <SelectItem value="jr_captain">Junior Captains</SelectItem>
                     <SelectItem value="previous_batch">Previous Batch</SelectItem>
                   </SelectContent>
                 </Select>
@@ -331,6 +370,19 @@ export default function TeamSettingsPage() {
                   />
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label htmlFor="image-file">Upload Image</Label>
+                <Input
+                  id="image-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Upload to the public Supabase bucket <code>{TEAM_BUCKET}</code>, or use an image URL below.
+                </p>
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="image-url">Image URL</Label>
@@ -460,7 +512,7 @@ export default function TeamSettingsPage() {
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-border p-10 text-center text-muted-foreground">
-              No team records yet. Add the founder, co-founder, current team, and previous batches here.
+              No team records yet. Add the founder, co-founder, current team, vice captains, junior captains, and previous batches here.
             </div>
           )}
         </CardContent>
