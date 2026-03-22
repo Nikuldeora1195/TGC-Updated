@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { DashboardSidebar } from "@/components/dashboard/sidebar"
+import { DashboardAnimatedBackground } from "@/components/dashboard/animated-background"
 
 export default async function DashboardLayout({
   children,
@@ -31,8 +32,9 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen bg-background">
       <DashboardSidebar role={role} userName={userName} memberId={memberId} />
-      <main className="flex-1 overflow-y-auto pt-16 lg:pt-0">
-        <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+      <main className="relative flex-1 overflow-y-auto pt-16 lg:pt-0">
+        <DashboardAnimatedBackground />
+        <div className="relative mx-auto max-w-7xl px-4 py-8 lg:px-8">
           {children}
         </div>
       </main>
