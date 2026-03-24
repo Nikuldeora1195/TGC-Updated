@@ -35,6 +35,36 @@ interface GalleryItem {
 
 const GALLERY_BUCKET = "gallery-images"
 
+function normalizeGalleryItems(data: unknown): GalleryItem[] {
+  if (!Array.isArray(data)) {
+    return []
+  }
+
+  return data.map((item) => {
+    const record = item as {
+      id: string
+      image_url: string
+      caption: string | null
+      event_id: string | null
+      uploaded_by: string | null
+      created_at: string
+      events?: { title: string } | { title: string }[] | null
+    }
+
+    const eventRecord = Array.isArray(record.events) ? record.events[0] || null : record.events || null
+
+    return {
+      id: record.id,
+      image_url: record.image_url,
+      caption: record.caption,
+      event_id: record.event_id,
+      uploaded_by: record.uploaded_by,
+      created_at: record.created_at,
+      events: eventRecord ? { title: eventRecord.title } : null,
+    }
+  })
+}
+
 function getFriendlyStorageError(message: string) {
   if (message.toLowerCase().includes("bucket")) {
     return `Storage bucket "${GALLERY_BUCKET}" is not ready. Create a public Supabase Storage bucket with this name, then try again.`
@@ -100,7 +130,7 @@ export default function DashboardGalleryPage() {
       if (galleryError) {
         setError(galleryError.message)
       } else {
-        setItems((galleryData as GalleryItem[]) || [])
+        setItems(normalizeGalleryItems(galleryData))
       }
 
       setLoading(false)
@@ -113,7 +143,7 @@ export default function DashboardGalleryPage() {
     if (galleryError || eventsError) {
       setError(galleryError?.message || eventsError?.message || "Failed to load gallery data.")
     } else {
-      setItems((galleryData as GalleryItem[]) || [])
+      setItems(normalizeGalleryItems(galleryData))
       setEvents(eventsData || [])
     }
 
