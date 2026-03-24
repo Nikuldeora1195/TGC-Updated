@@ -1,3 +1,4 @@
+import { HeroInteractiveBackground } from "@/components/home/hero-interactive-background"
 import Link from "next/link"
 import { ArrowRight, Users, Calendar, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -7,6 +8,7 @@ export function Hero() {
     <section className="relative min-h-screen overflow-hidden pt-16">
       {/* Background grid pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,200,200,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(0,200,200,0.2)_1px,transparent_1px)] bg-size-[64px_64px]" />
+      <HeroInteractiveBackground containerClassName="hero-background pointer-events-none absolute inset-0 overflow-hidden" />
       
       {/* Glowing orbs */}
       <div className="absolute left-1/4 top-1/4 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl" />

@@ -1,3 +1,7 @@
+"use client"
+
+import { useEffect, useRef } from "react"
+
 const STAR_POINTS = [
   { left: "4%", delay: "0s", duration: "11s" },
   { left: "9%", delay: "1.8s", duration: "9.8s" },
@@ -17,8 +21,69 @@ const STAR_POINTS = [
 ]
 
 export function DashboardAnimatedBackground() {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const frameRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) {
+      return
+    }
+
+    const setCursorPosition = (x: number, y: number) => {
+      container.style.setProperty("--dashboard-cursor-x", `${x}px`)
+      container.style.setProperty("--dashboard-cursor-y", `${y}px`)
+    }
+
+    const setDefaultPosition = () => {
+      const rect = container.getBoundingClientRect()
+      setCursorPosition(rect.width * 0.6, rect.height * 0.35)
+    }
+
+    setDefaultPosition()
+
+    const updateFromPointer = (event: PointerEvent) => {
+      const rect = container.getBoundingClientRect()
+      const isInside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom
+
+      if (!isInside) {
+        return
+      }
+
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current)
+      }
+
+      frameRef.current = window.requestAnimationFrame(() => {
+        setCursorPosition(event.clientX - rect.left, event.clientY - rect.top)
+      })
+    }
+
+    window.addEventListener("pointermove", updateFromPointer, { passive: true })
+    window.addEventListener("pointerdown", updateFromPointer, { passive: true })
+    window.addEventListener("resize", setDefaultPosition)
+
+    return () => {
+      window.removeEventListener("pointermove", updateFromPointer)
+      window.removeEventListener("pointerdown", updateFromPointer)
+      window.removeEventListener("resize", setDefaultPosition)
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current)
+      }
+    }
+  }, [])
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div ref={containerRef} className="dashboard-background pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="dashboard-gradient-veil" />
+      <div className="dashboard-gradient-veil dashboard-gradient-veil-secondary" />
+      <div className="dashboard-cursor-wave" />
+      <div className="dashboard-cursor-wave dashboard-cursor-wave-secondary" />
+
       {STAR_POINTS.map((star, index) => (
         <span
           key={`${star.left}-${index}`}
