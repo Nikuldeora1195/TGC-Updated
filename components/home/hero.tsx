@@ -1,6 +1,6 @@
 import { HeroInteractiveBackground } from "@/components/home/hero-interactive-background"
 import Link from "next/link"
-import { ArrowRight, Users, Calendar, Award } from "lucide-react"
+import { ArrowRight, CalendarDays, Presentation, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Hero() {
@@ -55,24 +55,24 @@ export function Hero() {
         <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-3">
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-              <Users className="h-6 w-6 text-primary" />
+              <CalendarDays className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-3xl font-bold text-foreground">500+</span>
-            <span className="text-sm text-muted-foreground">Active Members</span>
+            <span className="text-3xl font-bold text-foreground">10+</span>
+            <span className="text-sm text-muted-foreground">Meetings</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-              <Calendar className="h-6 w-6 text-primary" />
+              <Presentation className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-3xl font-bold text-foreground">50+</span>
-            <span className="text-sm text-muted-foreground">Events Hosted</span>
+            <span className="text-3xl font-bold text-foreground">5+</span>
+            <span className="text-sm text-muted-foreground">Seminars</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-              <Award className="h-6 w-6 text-primary" />
+              <Sparkles className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-3xl font-bold text-foreground">100+</span>
-            <span className="text-sm text-muted-foreground">Certificates Issued</span>
+            <span className="text-3xl font-bold text-foreground">More</span>
+            <span className="text-sm text-muted-foreground">Many More To Go</span>
           </div>
         </div>
       </div>

@@ -1,6 +1,11 @@
-import Image from "next/image"
 import Link from "next/link"
-import { Instagram, Linkedin, Github, Twitter } from "lucide-react"
+import { Instagram, Linkedin, Mail, MessageCircle } from "lucide-react"
+import { BrandMark } from "@/components/brand-mark"
+
+const CONTACT_EMAIL = "techgenzpacific@gmail.com"
+const INSTAGRAM_URL = "https://www.instagram.com/techgenz.pacific/"
+const LINKEDIN_URL = "https://linkedin.com/company/techgenzpacific"
+const WHATSAPP_URL = "https://chat.whatsapp.com/Lk2Gz7foHH9Ko12wTfIctA?mode=ac_c"
 
 const footerLinks = {
   platform: [
@@ -11,10 +16,10 @@ const footerLinks = {
     { label: "About", href: "/about" },
   ],
   resources: [
-    { label: "Documentation", href: "#" },
-    { label: "Help Center", href: "#" },
-    { label: "Community Guidelines", href: "#" },
-    { label: "Contact Us", href: "#" },
+    { label: "Email Us", href: `mailto:${CONTACT_EMAIL}` },
+    { label: "Instagram", href: INSTAGRAM_URL },
+    { label: "LinkedIn", href: LINKEDIN_URL },
+    { label: "WhatsApp Community", href: WHATSAPP_URL },
   ],
   legal: [
     { label: "Privacy Policy", href: "#" },
@@ -23,10 +28,10 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Github, href: "#", label: "GitHub" },
-  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Mail, href: `mailto:${CONTACT_EMAIL}`, label: "Email" },
+  { icon: Instagram, href: INSTAGRAM_URL, label: "Instagram" },
+  { icon: Linkedin, href: LINKEDIN_URL, label: "LinkedIn" },
+  { icon: MessageCircle, href: WHATSAPP_URL, label: "WhatsApp" },
 ]
 
 export function Footer() {
@@ -35,20 +40,24 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src="/apple-icon.png" alt="TechGenz logo" width={40} height={40} className="h-10 w-10 object-contain" />
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                Tech<span className="text-primary">Genz</span>
-              </span>
+            <Link href="/" className="flex items-center">
+              <BrandMark iconClassName="h-10 w-10 rounded-xl" textClassName="h-11" />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
               The official tech community of Pacific Institute of Technology. Building the future, one line of code at a time.
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="transition-colors hover:text-foreground">
+                {CONTACT_EMAIL}
+              </a>
             </p>
             <div className="mt-6 flex gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                   aria-label={social.label}
                 >
@@ -79,12 +88,14 @@ export function Footer() {
               <ul className="mt-4 space-y-3">
                 {footerLinks.resources.map((link) => (
                   <li key={link.label}>
-                    <Link
+                    <a
                       href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>

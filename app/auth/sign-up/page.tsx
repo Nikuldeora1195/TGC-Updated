@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -9,6 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { BrandMark } from "@/components/brand-mark"
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -64,7 +64,7 @@ export default function SignUpPage() {
           </Link>
 
           <div className="mb-8 flex items-center gap-3">
-            <Image src="/apple-icon.png" alt="TechGenz logo" width={40} height={40} className="h-10 w-10 object-contain" />
+            <BrandMark showText={false} iconClassName="h-10 w-10 rounded-xl" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Join TechGenz</h1>
               <p className="text-sm text-muted-foreground">Create your account</p>

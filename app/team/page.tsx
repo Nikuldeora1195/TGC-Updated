@@ -47,15 +47,15 @@ export default async function TeamPage() {
             <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               Team TechGenz
             </h1>
-            <p className="mx-auto mt-4 max-w-3xl text-lg text-muted-foreground">
+            <p className="mx-auto mt-4 max-w-3xl text-base text-muted-foreground sm:text-lg">
               Meet the founders, the current leadership team, and the previous batches that helped
               build the community.
             </p>
           </div>
         </section>
 
-        <section className="py-16">
-          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
+        <section className="py-14 sm:py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Founders</h2>
               <p className="mt-2 text-muted-foreground">
@@ -64,7 +64,7 @@ export default async function TeamPage() {
             </div>
 
             {founders.length > 0 ? (
-              <div className="mx-auto mt-10 grid max-w-5xl gap-6 sm:grid-cols-2">
+              <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:mt-10 sm:gap-6">
                 {founders.slice(0, 2).map((member) => (
                   <TeamMemberCard
                     key={member.id}
@@ -88,7 +88,7 @@ export default async function TeamPage() {
           </div>
         </section>
 
-        <section className="border-y border-border/50 bg-card/30 py-16">
+        <section className="border-y border-border/50 bg-card/30 py-14 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Current Team</h2>
@@ -98,7 +98,7 @@ export default async function TeamPage() {
             </div>
 
             {currentTeam.length > 0 ? (
-              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                 {currentTeam.map((member) => (
                   <TeamMemberCard
                     key={member.id}
@@ -122,7 +122,7 @@ export default async function TeamPage() {
           </div>
         </section>
 
-        <section className="py-16">
+        <section className="py-14 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Vice Captains</h2>
@@ -132,7 +132,7 @@ export default async function TeamPage() {
             </div>
 
             {viceCaptains.length > 0 ? (
-              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                 {viceCaptains.map((member) => (
                   <TeamMemberCard
                     key={member.id}
@@ -156,7 +156,7 @@ export default async function TeamPage() {
           </div>
         </section>
 
-        <section className="border-y border-border/50 bg-card/30 py-16">
+        <section className="border-y border-border/50 bg-card/30 py-14 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Junior Captains</h2>
@@ -166,7 +166,7 @@ export default async function TeamPage() {
             </div>
 
             {juniorCaptains.length > 0 ? (
-              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                 {juniorCaptains.map((member) => (
                   <TeamMemberCard
                     key={member.id}
@@ -190,7 +190,7 @@ export default async function TeamPage() {
           </div>
         </section>
 
-        <section className="py-16">
+        <section className="py-14 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Previous Batches</h2>
@@ -200,11 +200,11 @@ export default async function TeamPage() {
             </div>
 
             {groupedPreviousBatches.length > 0 ? (
-              <div className="mt-10 space-y-12">
+              <div className="mt-8 space-y-10 sm:mt-10 sm:space-y-12">
                 {groupedPreviousBatches.map(([batchLabel, members]) => (
                   <div key={batchLabel}>
                     <h3 className="text-xl font-semibold text-foreground">{batchLabel}</h3>
-                    <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="mt-5 grid grid-cols-2 gap-4 sm:mt-6 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                       {members.map((member) => (
                         <TeamMemberCard
                           key={member.id}

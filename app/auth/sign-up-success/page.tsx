@@ -1,7 +1,7 @@
-import Image from "next/image"
 import Link from "next/link"
 import { Mail, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { BrandMark } from "@/components/brand-mark"
 
 export default function SignUpSuccessPage() {
   return (
@@ -34,7 +34,7 @@ export default function SignUpSuccessPage() {
         </div>
 
         <div className="mt-12 flex items-center gap-2 text-sm text-muted-foreground">
-          <Image src="/apple-icon.png" alt="TechGenz logo" width={16} height={16} className="h-4 w-4 object-contain" />
+          <BrandMark showText={false} iconClassName="h-4 w-4 rounded-md" />
           <span>TechGenz - Pacific Institute of Technology</span>
         </div>
       </div>

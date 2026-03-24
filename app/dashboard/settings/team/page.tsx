@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Plus, Trash2, Users } from "lucide-react"
+import { Loader2, Pencil, Plus, Trash2, Users } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -51,6 +51,7 @@ const batchOptions = [
 ]
 
 const TEAM_BUCKET = "team-images"
+const MAX_IMAGE_SIZE_BYTES = 500 * 1024
 
 function getFriendlyTeamTableError(message: string) {
   if (
@@ -78,6 +79,7 @@ export default function TeamSettingsPage() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [roleError, setRoleError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
@@ -95,10 +97,70 @@ export default function TeamSettingsPage() {
     isActive: true,
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [removeExistingImage, setRemoveExistingImage] = useState(false)
 
   useEffect(() => {
     fetchMembers()
   }, [])
+
+  function resetForm() {
+    setFormData({
+      name: "",
+      displayRole: "",
+      section: "",
+      batchLabel: "",
+      customBatchLabel: "",
+      bio: "",
+      imageUrl: "",
+      linkedinUrl: "",
+      githubUrl: "",
+      email: "",
+      sortOrder: "0",
+      isActive: true,
+    })
+    setImageFile(null)
+    setRemoveExistingImage(false)
+    setEditingId(null)
+  }
+
+  function startEditing(member: TeamMember) {
+    setEditingId(member.id)
+    setImageFile(null)
+    setRemoveExistingImage(false)
+    setError(null)
+    setFormData({
+      name: member.name,
+      displayRole: member.display_role,
+      section: member.section,
+      batchLabel: batchOptions.includes(member.batch_label || "") ? member.batch_label || "" : member.batch_label ? "Custom" : "",
+      customBatchLabel:
+        member.batch_label && !batchOptions.includes(member.batch_label) ? member.batch_label : "",
+      bio: member.bio || "",
+      imageUrl: member.image_url || "",
+      linkedinUrl: member.linkedin_url || "",
+      githubUrl: member.github_url || "",
+      email: member.email || "",
+      sortOrder: String(member.sort_order ?? 0),
+      isActive: member.is_active,
+    })
+  }
+
+  function handleImageFileChange(file: File | null) {
+    if (!file) {
+      setImageFile(null)
+      return
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setImageFile(null)
+      setError("Profile photo must be smaller than 500 KB. Please compress it or use an image link instead.")
+      return
+    }
+
+    setError(null)
+    setRemoveExistingImage(false)
+    setImageFile(file)
+  }
 
   async function fetchMembers() {
     setLoading(true)
@@ -159,7 +221,13 @@ export default function TeamSettingsPage() {
       return
     }
 
-    let imageUrl = formData.imageUrl.trim()
+    if (imageFile && imageFile.size > MAX_IMAGE_SIZE_BYTES) {
+      setError("Profile photo must be smaller than 500 KB. Please compress it or use an image link instead.")
+      setSubmitting(false)
+      return
+    }
+
+    let imageUrl = removeExistingImage ? "" : formData.imageUrl.trim()
 
     if (imageFile) {
       const fileExt = imageFile.name.split(".").pop() || "jpg"
@@ -182,48 +250,41 @@ export default function TeamSettingsPage() {
       imageUrl = publicUrl
     }
 
-    const { error: insertError } = await supabase.from("team_members").insert({
-      name: formData.name,
-      display_role: formData.displayRole,
+    const payload = {
+      name: formData.name.trim(),
+      display_role: formData.displayRole.trim(),
       section: formData.section,
       batch_label:
         formData.section === "previous_batch"
           ? formData.batchLabel === "Custom"
-            ? formData.customBatchLabel || null
+            ? formData.customBatchLabel.trim() || null
             : formData.batchLabel || null
           : null,
-      bio: formData.bio || null,
+      bio: formData.bio.trim() || null,
       image_url: imageUrl || null,
-      linkedin_url: formData.linkedinUrl || null,
-      github_url: formData.githubUrl || null,
-      email: formData.email || null,
+      linkedin_url: formData.linkedinUrl.trim() || null,
+      github_url: formData.githubUrl.trim() || null,
+      email: formData.email.trim() || null,
       sort_order: Number(formData.sortOrder) || 0,
       is_active: formData.isActive,
-      created_by: user.id,
-    })
+    }
 
-    if (insertError) {
-      setError(getFriendlyTeamTableError(insertError.message))
+    const query = editingId
+      ? supabase.from("team_members").update(payload).eq("id", editingId)
+      : supabase.from("team_members").insert({
+          ...payload,
+          created_by: user.id,
+        })
+
+    const { error: saveError } = await query
+
+    if (saveError) {
+      setError(getFriendlyTeamTableError(saveError.message))
       setSubmitting(false)
       return
     }
 
-    setFormData({
-      name: "",
-      displayRole: "",
-      section: "",
-      batchLabel: "",
-      customBatchLabel: "",
-      bio: "",
-      imageUrl: "",
-      linkedinUrl: "",
-      githubUrl: "",
-      email: "",
-      sortOrder: "0",
-      isActive: true,
-    })
-    setImageFile(null)
-
+    resetForm()
     await fetchMembers()
     setSubmitting(false)
   }
@@ -268,14 +329,18 @@ export default function TeamSettingsPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground lg:text-3xl">Team Management</h1>
         <p className="mt-1 text-muted-foreground">
-          Set founders, current positions, and previous batch team members for the public team page.
+          Set founders, current positions, previous batch members, and update profile photos for the public team page.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Add Team Member</CardTitle>
-          <CardDescription>Create a new founder, current team, or previous batch entry.</CardDescription>
+          <CardTitle>{editingId ? "Edit Team Member" : "Add Team Member"}</CardTitle>
+          <CardDescription>
+            {editingId
+              ? "Update member details, replace their profile photo, or switch to an image link."
+              : "Create a new founder, current team, or previous batch entry."}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -377,11 +442,16 @@ export default function TeamSettingsPage() {
                   id="image-file"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                  onChange={(e) => handleImageFileChange(e.target.files?.[0] || null)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Upload to the public Supabase bucket <code>{TEAM_BUCKET}</code>, or use an image URL below.
+                  Upload a profile photo under 500 KB to the public Supabase bucket <code>{TEAM_BUCKET}</code>, or use an image URL below.
                 </p>
+                {imageFile && (
+                  <p className="text-xs text-muted-foreground">
+                    Selected: {imageFile.name} ({Math.round(imageFile.size / 1024)} KB)
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -390,9 +460,39 @@ export default function TeamSettingsPage() {
                   id="image-url"
                   type="url"
                   value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                  onChange={(e) => {
+                    setRemoveExistingImage(false)
+                    setFormData({ ...formData, imageUrl: e.target.value })
+                  }}
+                  placeholder="https://example.com/member-photo.jpg"
                 />
+                <p className="text-xs text-muted-foreground">
+                  If both are provided, the uploaded image is used.
+                </p>
               </div>
+
+              {editingId && formData.imageUrl && !removeExistingImage && !imageFile && (
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Current Photo</Label>
+                  <div className="flex items-center gap-4 rounded-lg border border-border p-4">
+                    <img
+                      src={formData.imageUrl}
+                      alt={formData.name || "Team member"}
+                      className="h-16 w-16 rounded-full object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setFormData({ ...formData, imageUrl: "" })
+                        setRemoveExistingImage(true)
+                      }}
+                    >
+                      Remove Photo
+                    </Button>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="linkedin-url">LinkedIn URL</Label>
@@ -457,11 +557,20 @@ export default function TeamSettingsPage() {
                 </>
               ) : (
                 <>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Team Member
+                  {editingId ? (
+                    <Pencil className="mr-2 h-4 w-4" />
+                  ) : (
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
+                  {editingId ? "Update Team Member" : "Add Team Member"}
                 </>
               )}
             </Button>
+            {editingId && (
+              <Button type="button" variant="outline" className="ml-3" onClick={resetForm}>
+                Cancel Edit
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>
@@ -480,9 +589,17 @@ export default function TeamSettingsPage() {
                   className="flex flex-col gap-4 rounded-xl border border-border p-4 lg:flex-row lg:items-start lg:justify-between"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <Users className="h-5 w-5" />
-                    </div>
+                    {member.image_url ? (
+                      <img
+                        src={member.image_url}
+                        alt={member.name}
+                        className="h-12 w-12 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Users className="h-5 w-5" />
+                      </div>
+                    )}
                     <div>
                       <p className="font-medium text-foreground">{member.name}</p>
                       <p className="text-sm text-primary">{member.display_role}</p>
@@ -495,18 +612,29 @@ export default function TeamSettingsPage() {
                     </div>
                   </div>
 
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(member.id)}
-                    disabled={deletingId === member.id}
-                  >
-                    {deletingId === member.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-4 w-4" />
-                    )}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => startEditing(member)}
+                      aria-label={`Edit ${member.name}`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => handleDelete(member.id)}
+                      disabled={deletingId === member.id}
+                      aria-label={`Delete ${member.name}`}
+                    >
+                      {deletingId === member.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

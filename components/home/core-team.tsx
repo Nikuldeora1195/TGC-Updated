@@ -25,13 +25,13 @@ export async function CoreTeam() {
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Meet Our Team
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
             The founders and current team members driving TechGenz forward.
           </p>
         </div>
 
         {previewMembers.length > 0 ? (
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:mt-16 sm:gap-6 lg:grid-cols-4">
             {previewMembers.map((member) => (
               <TeamMemberCard
                 key={member.id}

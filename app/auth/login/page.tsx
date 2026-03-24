@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -9,6 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { BrandMark } from "@/components/brand-mark"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -106,7 +106,7 @@ export default function LoginPage() {
               {isAdminLogin ? (
                 <Shield className="h-5 w-5 text-black" />
               ) : (
-                <Image src="/apple-icon.png" alt="TechGenz logo" width={40} height={40} className="h-10 w-10 object-contain" />
+                <BrandMark showText={false} iconClassName="h-10 w-10 rounded-xl" />
               )}
             </div>
             <div>

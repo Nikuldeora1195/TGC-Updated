@@ -1,7 +1,12 @@
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { CoreTeam } from "@/components/home/core-team"
-import { Target, Eye, Heart, Zap, Mail, Phone, MapPin } from "lucide-react"
+import { Target, Eye, Heart, Zap, Mail, Instagram, Linkedin, MessageCircle } from "lucide-react"
+
+const CONTACT_EMAIL = "techgenzpacific@gmail.com"
+const INSTAGRAM_URL = "https://www.instagram.com/techgenz.pacific/"
+const LINKEDIN_URL = "https://linkedin.com/company/techgenzpacific"
+const WHATSAPP_URL = "https://chat.whatsapp.com/Lk2Gz7foHH9Ko12wTfIctA?mode=ac_c"
 
 export default function AboutPage() {
   return (
@@ -83,14 +88,13 @@ export default function AboutPage() {
               <p className="mt-6 text-lg text-muted-foreground">
                 TechGenz was founded in 2020 by a group of passionate students at 
                 Pacific Institute of Technology who believed in the power of community 
-                learning. What started as a small study group has grown into a thriving 
-                community of over 500 members.
+                learning. What started as a small study group has grown into an active 
+                community that keeps creating opportunities to learn, build, and collaborate.
               </p>
               <p className="mt-4 text-lg text-muted-foreground">
-                Over the years, we have organized 50+ events including workshops, 
-                hackathons, and industry talks. Our members have gone on to work at 
-                leading tech companies and startups, carrying forward the spirit of 
-                innovation and collaboration.
+                So far, we have hosted 10+ meetings and 5+ seminars, with many more sessions, 
+                collaborations, and community initiatives still ahead. Every activity is built 
+                to help students grow with practical exposure and shared learning.
               </p>
             </div>
           </div>
@@ -109,29 +113,63 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
+            <div className="mx-auto mt-12 grid max-w-5xl gap-6 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-foreground">Email</h3>
-                <p className="mt-2 text-muted-foreground">contact@techgenz.in</p>
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="mt-2 block break-all text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {CONTACT_EMAIL}
+                </a>
               </div>
 
               <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <Phone className="h-6 w-6 text-primary" />
+                  <Instagram className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="mt-5 text-lg font-semibold text-foreground">Phone</h3>
-                <p className="mt-2 text-muted-foreground">+91 98765 43210</p>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">Instagram</h3>
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 block text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  @techgenz.pacific
+                </a>
               </div>
 
               <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <MapPin className="h-6 w-6 text-primary" />
+                  <Linkedin className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="mt-5 text-lg font-semibold text-foreground">Location</h3>
-                <p className="mt-2 text-muted-foreground">Pacific Institute of Technology Campus</p>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">LinkedIn</h3>
+                <a
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 block break-all text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  linkedin.com/company/techgenzpacific
+                </a>
+              </div>
+
+              <div className="rounded-2xl border border-border/50 bg-card p-8 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <MessageCircle className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">WhatsApp</h3>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 block break-all text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Join Community
+                </a>
               </div>
             </div>
           </div>

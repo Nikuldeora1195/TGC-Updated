@@ -33,7 +33,7 @@ export default async function DashboardTeamPage() {
   const groupedPreviousBatches = Object.entries(groupByBatch(previousBatches))
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-10 sm:space-y-12">
       <div>
         <h1 className="text-2xl font-bold text-foreground lg:text-3xl">Team</h1>
         <p className="mt-1 text-muted-foreground">
@@ -48,7 +48,7 @@ export default async function DashboardTeamPage() {
         </div>
 
         {founders.length > 0 ? (
-          <div className="mx-auto mt-10 grid max-w-xl  gap-6 sm:grid-cols-2">
+          <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:mt-10 sm:gap-6">
             {founders.slice(0, 2).map((member) => (
               <TeamMemberCard
                 key={member.id}
@@ -77,7 +77,7 @@ export default async function DashboardTeamPage() {
           <p className="mt-2 text-muted-foreground">The current members leading events and community initiatives.</p>
         </div>
         {currentTeam.length > 0 ? (
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {currentTeam.map((member) => (
               <TeamMemberCard
                 key={member.id}
@@ -104,7 +104,7 @@ export default async function DashboardTeamPage() {
           <p className="mt-2 text-muted-foreground">Team members supporting leadership across major initiatives.</p>
         </div>
         {viceCaptains.length > 0 ? (
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {viceCaptains.map((member) => (
               <TeamMemberCard
                 key={member.id}
@@ -131,7 +131,7 @@ export default async function DashboardTeamPage() {
           <p className="mt-2 text-muted-foreground">Emerging team members learning and growing into leadership.</p>
         </div>
         {juniorCaptains.length > 0 ? (
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {juniorCaptains.map((member) => (
               <TeamMemberCard
                 key={member.id}
@@ -159,11 +159,11 @@ export default async function DashboardTeamPage() {
         </div>
 
         {groupedPreviousBatches.length > 0 ? (
-          <div className="mt-10 space-y-12">
+          <div className="mt-8 space-y-10 sm:mt-10 sm:space-y-12">
             {groupedPreviousBatches.map(([batchLabel, members]) => (
               <div key={batchLabel}>
                 <h3 className="text-xl font-semibold text-foreground">{batchLabel}</h3>
-                <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="mt-5 grid grid-cols-2 gap-4 sm:mt-6 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                   {members.map((member) => (
                     <TeamMemberCard
                       key={member.id}

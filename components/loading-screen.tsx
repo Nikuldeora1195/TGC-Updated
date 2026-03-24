@@ -12,11 +12,11 @@ export function LoadingScreen({
   return (
     <div
       className={cn(
-        "relative flex min-h-[50vh] items-center justify-center overflow-hidden rounded-[2rem] border border-border/60 bg-card/70 px-6 py-16 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl",
+        "relative flex min-h-[50vh] items-center justify-center overflow-hidden rounded-4xl border border-border/60 bg-card/70 px-6 py-16 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl",
         className
       )}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(74,222,243,0.18),_transparent_45%),radial-gradient(circle_at_bottom_right,_rgba(45,212,191,0.16),_transparent_35%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(74,222,243,0.18),transparent_45%),radial-gradient(circle_at_bottom_right,rgba(45,212,191,0.16),transparent_35%)]" />
 
       <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/15 bg-primary/5 blur-3xl" />
 

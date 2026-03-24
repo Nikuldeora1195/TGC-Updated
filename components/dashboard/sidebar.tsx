@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
@@ -20,6 +19,7 @@ import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { BrandMark } from "@/components/brand-mark"
 
 interface SidebarProps {
   role: "student" | "core_team" | "admin"
@@ -80,13 +80,12 @@ export function DashboardSidebar({ role, userName, memberId }: SidebarProps) {
   const sidebarContent = (
     <>
       <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/apple-icon.png" alt="TechGenz logo" width={32} height={32} className="h-8 w-8 object-contain" />
-          {!collapsed && (
-            <span className="text-lg font-bold text-sidebar-foreground">
-              Tech<span className="text-sidebar-primary">Genz</span>
-            </span>
-          )}
+        <Link href="/" className="flex items-center">
+          <BrandMark
+            showText={!collapsed}
+            iconClassName="h-8 w-8 rounded-lg"
+            textClassName="h-8"
+          />
         </Link>
         <Button
           variant="ghost"
