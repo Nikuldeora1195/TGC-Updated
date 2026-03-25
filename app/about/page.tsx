@@ -86,7 +86,7 @@ export default function AboutPage() {
                 Building Tomorrow&apos;s Tech Leaders
               </h2>
               <p className="mt-6 text-lg text-muted-foreground">
-                TechGenz was founded in 2020 by a group of passionate students at 
+                TechGenz was founded in August 2025 by a group of passionate students at 
                 Pacific Institute of Technology who believed in the power of community 
                 learning. What started as a small study group has grown into an active 
                 community that keeps creating opportunities to learn, build, and collaborate.
