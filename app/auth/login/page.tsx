@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ArrowLeft, Loader2, Shield, User } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,35 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [isAdminLogin, setIsAdminLogin] = useState(false)
+
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("code")
+
+    if (!code) {
+      return
+    }
+
+    const verificationCode = code
+
+    async function completeEmailVerification() {
+      setError(null)
+      setLoading(true)
+
+      const supabase = createClient()
+      const { error } = await supabase.auth.exchangeCodeForSession(verificationCode)
+
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+        return
+      }
+
+      router.replace("/dashboard")
+      router.refresh()
+    }
+
+    completeEmailVerification()
+  }, [router])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
